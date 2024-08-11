@@ -1,0 +1,15 @@
+[server]
+address = "127.0.0.1:8080"
+threads = 4
+
+[jira]
+base_url = "https://jira.com"
+token = ""
+
+[api]
+base_url = ""
+threads_endpoint = "/threads"
+question_endpoint = "/threads/appinchat"
+msgs_by_thread_id_endpoint = "/threads/{thread_id}/messages"
+token = ""
+jql_chatbot_id = ""
