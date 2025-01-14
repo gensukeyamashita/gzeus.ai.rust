@@ -3,22 +3,9 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use crate::settings::Settings;
 use reqwest::Client;
-use serde::Deserialize;
+use crate::jira::dto::jql_query::JqlQuery;
 
-#[derive(Deserialize)]
-struct JqlQuery {
-    jql: String,
-    fields: Option<String>, // Optional parameter for fields
-}
-
-pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(
-        web::resource("/jira/issues")
-            .route(web::get().to(fetch_issues)),
-    );
-}
-
-async fn fetch_issues(
+pub async fn fetch_issues(
     settings: web::Data<Arc<Mutex<Settings>>>,
     query: web::Query<JqlQuery>,
 ) -> impl Responder {
