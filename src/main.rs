@@ -6,10 +6,14 @@ mod settings;
 mod utils;
 mod jira;
 mod gzeus_ai;
+mod confluence;
+mod routes1;
+mod routes2;
+mod routes3;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let settings = settings::Settings::new().expect("Failed to load settings");
+    let settings = settings::init::Settings::new().expect("Failed to load settings");
     let settings = Arc::new(Mutex::new(settings));
 
     // Clone the settings Arc before using it in the workers and bind methods
@@ -19,9 +23,10 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(settings.clone()))
-            .configure(jira::init)
-            .configure(gzeus_ai::init)
+            .app_data(web::Data::new(&mut settings))
+            .configure(jira::routes::init)
+            .configure(gzeus_ai::routes::init)
+            .configure(confluence::routes::init)
     })
     .workers(server_threads)
     .bind(server_address)?
